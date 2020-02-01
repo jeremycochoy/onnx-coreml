@@ -19,10 +19,14 @@ from typing import Text, IO
 @click.option('-o', '--output', required=True,
               type=str,
               help='Output path for the CoreML *.mlmodel file')
-def onnx_to_coreml(onnx_model, output):  # type: (IO[str], str) -> None
+@click.option('-t', '--minimum_ios_deployment_target', required=False,
+              default='11.2',
+              type=str,
+              help='Output path for the CoreML *.mlmodel file')
+def onnx_to_coreml(onnx_model, output, **kargs):  # type: (IO[str], str) -> None
     onnx_model_proto = onnx_pb.ModelProto()
     onnx_model_proto.ParseFromString(onnx_model.read())
-    coreml_model = convert(onnx_model_proto)
+    coreml_model = convert(onnx_model_proto, **kargs)
     coreml_model.save(output)
 
 
